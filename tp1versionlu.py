@@ -39,8 +39,41 @@ def der_seg_f3(x):
 # --------------------------------------------------
     
 # --------------------- Metodos de Busqueda de Raices -----------------------
+error_sqrt ="No existe una raiz en el intervalo dado" 
+error_failure= "Procedimiento terminado sin éxito "
+result_sqrt= "La raiz encontrada"
 
 def Biseccion(f,a,b,tol,nmax):
+    
+    if np.sign(f(a)*f(b))==0:
+        print(error_sqrt)
+        return None
+
+
+    i = 1
+    FI=f(a) #Arranco comparando con f(a)
+   
+    
+    while i <= N0:
+        p=a+(b-a)/2
+        
+        FP=f(p)
+        
+        if (FP==0 or (b-a)/2 <TOL):
+            return p,i
+        
+        else:
+                i=i+1
+            
+        if (np.sign(FI*FP)==1):
+            a=p
+            FI=FP
+            
+        else:
+              b=p
+        
+    print(error_failure)
+    return None 
     
 
 
