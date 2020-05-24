@@ -7,6 +7,7 @@ Created on Sat May 23 20:17:31 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import arange
 
 # --------------------- Definicion de Funciones de Uso -------------------
 def funcion1 (x):
@@ -76,7 +77,7 @@ def Biseccion(f,a,b,tol,nmax):
     return None 
     
 
-
+"""
 def NR_normal(f,sem,f_deriv_prim,tol,nmax):
 
 
@@ -105,16 +106,17 @@ sem_sec_1 = 2
 raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(g,p0,tolerancia,nMax)
 
 # --------------------------------------------------------
-
+"""
 # -------------------- Graficos de Funciones ----------------------------           
-x = range(0, 3)
+x = arange(0, 3, 0.01)
 plt.figure()
 plt.plot(x, [ funcion1 (i) for i in x], '-',lw=2,label='funcion1')
 plt.plot(x, [ funcion2 (i) for i in x], '-',lw=2,label='funcion2')
 plt.plot(x, [ funcion3 (i) for i in x], '-',lw=2,label='funcion3')
 plt.xlabel('x')
 plt.ylabel('y')
-plt.ylim(-3, 3)
+plt.ylim(-2, 2)
+plt.xlim(0,2)
 plt.title('Graficos de Funciones en el Intervalo de In')  
 plt.legend(loc='best')
 plt.grid(True)
