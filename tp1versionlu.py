@@ -77,7 +77,7 @@ def Biseccion(f,a,b,tol,nmax):
     return None 
     
 
-"""
+
 def NR_normal(f,sem,f_deriv_prim,tol,nmax):
 
 
@@ -106,7 +106,7 @@ sem_sec_1 = 2
 raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(g,p0,tolerancia,nMax)
 
 # --------------------------------------------------------
-"""
+
 # -------------------- Graficos de Funciones ----------------------------           
 x = arange(0, 3, 0.01)
 plt.figure()
