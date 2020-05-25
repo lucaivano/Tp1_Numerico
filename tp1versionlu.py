@@ -7,7 +7,7 @@ Created on Sat May 23 20:17:31 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy import arange
+#from scipy import arange
 
 # --------------------- Definicion de Funciones de Uso -------------------
 def funcion1 (x):
@@ -44,6 +44,7 @@ error_sqrt ="No existe una raiz en el intervalo dado"
 error_failure= "Procedimiento terminado sin éxito "
 result_sqrt= "La raiz encontrada"
 
+"""
 def Biseccion(f,a,b,tol,nmax):
     
     if np.sign(f(a)*f(b))==0:
@@ -75,26 +76,28 @@ def Biseccion(f,a,b,tol,nmax):
         
     print(error_failure)
     return None 
-    
+  """  
 
 
 def NR_normal(f,sem,f_deriv_prim,tol,nmax):
-
+    return None
 
 def NR_modif(f,sem,f_deriv_seg,tol,nmax):
-
+    return None
 
 def Secante(f,sem0,sem1,tol,nmax):
-
+    return None
 
 # ----------------------------------------------------
 
 # --------------------Parametros de la Configuracion -------------------------
+"""
 tolerancia = 1e-5
 a = 0
 b = 2
 
 raiz_Biseccion,nIteraciones_Biseccion,historiaRaices_Biseccion = Biseccion(f1,a,b,tolerancia,nMax)
+
 
 x0 = 1.0
 raiz_NR_norm,nIteraciones_NR_norm,historiaRaices_NR_norm = NR_norm(f1,x0,tolerancia,nMax)
@@ -128,3 +131,4 @@ plt.show()
 
 
 # -------------------------------------------------------
+"""
