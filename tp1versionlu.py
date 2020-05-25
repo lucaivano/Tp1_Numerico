@@ -23,7 +23,7 @@ def funcion2 (x):
     return(x**5 - 6.6 * x**4 + 5.12 * x**3 + 21.312 * x**2 - 38.016 * x + 17.28 )
 
 def der_prim_f2(x):
-    return (5 * x**4 - 26.4 * x**3 + 15.36 * x**2 - 42.624 * x + 38.016 )
+    return (5 * x**4 - 26.4 * x**3 + 15.36 * x**2 + 42.624 * x - 38.016 )
 
 def der_seg_f2(x):
     return (20 * x**3 - 79.2 * x**2 - 30.72 * x + 42.624)
@@ -101,6 +101,7 @@ def NR_normal(f,sem,f_deriv_prim,tol,nmax):
             return p, i, historia
 
         #Si no, actualizo el p anterior e incremento el índice
+        print("Iteraciones:", i, "Raiz:", p)
         p_ant = p
         i += 1
     #Si se llega a la cantidad máxima de iteraciones sin encontrar la raíz, lo aviso y no retorno nada
@@ -118,7 +119,7 @@ def Secante(f,sem0,sem1,tol,nmax):
 # --------------------Parametros de la Configuracion -------------------------
 
 tolerancia = 1e-5
-max_it = 50
+max_it = 500
 #a = 0
 #b = 2
 
@@ -126,7 +127,7 @@ max_it = 50
 
 
 x0 = 1.0
-raiz_NR_norm,nIteraciones_NR_norm,historiaRaices_NR_norm = NR_normal(funcion1,x0,der_prim_f1,tolerancia,max_it)
+raiz_NR_norm,nIteraciones_NR_norm,historiaRaices_NR_norm = NR_normal(funcion3,x0,der_prim_f3,tolerancia,max_it)
 
 print(historiaRaices_NR_norm)
 
