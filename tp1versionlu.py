@@ -40,9 +40,9 @@ def der_seg_f3(x):
 # --------------------------------------------------
     
 # --------------------- Metodos de Busqueda de Raices -----------------------
-error_sqrt ="No existe una raiz en el intervalo dado" 
-error_failure= "Procedimiento terminado sin éxito "
-result_sqrt= "La raiz encontrada"
+error_rt ="No existe una raiz en el intervalo dado" 
+error_failure= "Procedimiento terminado sin éxito"
+result_rt= "La raiz encontrada"
 
 """
 def Biseccion(f,a,b,tol,nmax):
@@ -80,6 +80,31 @@ def Biseccion(f,a,b,tol,nmax):
 
 
 def NR_normal(f,sem,f_deriv_prim,tol,nmax):
+
+    historia = np.zeros((nmax, 2))
+    p_ant = sem
+    #Antes de la primera iteración guardo con índice 0 la semilla
+    historia[0] = (0, sem)
+
+    i = 1
+    while i < nmax:
+
+        #Genero la sucesión de Newton Raphson
+        p = p_ant - f(p_ant)/f_deriv_prim(p_ant)
+        #Guardo en la historia el número de iteración con el nuevo p
+        historia[i] = (i, p)
+
+        #Si se llegó a la tolerancia deseada retorno la raíz, su número de iteración y la historia
+        if np.abs(p - p_ant) < tol:
+            #Acorto la historia hasta la última iteración
+            historia = historia[:i+1]
+            return p, i, historia
+
+        #Si no, actualizo el p anterior e incremento el índice
+        p_ant = p
+        i += 1
+    #Si se llega a la cantidad máxima de iteraciones sin encontrar la raíz, lo aviso y no retorno nada
+    print(error_failure)
     return None
 
 def NR_modif(f,sem,f_deriv_seg,tol,nmax):
@@ -91,22 +116,26 @@ def Secante(f,sem0,sem1,tol,nmax):
 # ----------------------------------------------------
 
 # --------------------Parametros de la Configuracion -------------------------
-"""
-tolerancia = 1e-5
-a = 0
-b = 2
 
-raiz_Biseccion,nIteraciones_Biseccion,historiaRaices_Biseccion = Biseccion(f1,a,b,tolerancia,nMax)
+tolerancia = 1e-5
+max_it = 50
+#a = 0
+#b = 2
+
+#raiz_Biseccion,nIteraciones_Biseccion,historiaRaices_Biseccion = Biseccion(f1,a,b,tolerancia,max_it)
 
 
 x0 = 1.0
-raiz_NR_norm,nIteraciones_NR_norm,historiaRaices_NR_norm = NR_norm(f1,x0,tolerancia,nMax)
+raiz_NR_norm,nIteraciones_NR_norm,historiaRaices_NR_norm = NR_normal(funcion1,x0,der_prim_f1,tolerancia,max_it)
 
-raiz_NR_modif,nIteraciones_NR_modif,historiaRaices_NR_modif = NR_modif(f1,x0,tolerancia,nMax)
+print(historiaRaices_NR_norm)
+
+"""
+raiz_NR_modif,nIteraciones_NR_modif,historiaRaices_NR_modif = NR_modif(f1,x0,tolerancia,max_it)
 
 sem_sec_0 = 0
 sem_sec_1 = 2
-raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(g,p0,tolerancia,nMax)
+raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(g,p0,tolerancia,max_it)
 
 # --------------------------------------------------------
 
