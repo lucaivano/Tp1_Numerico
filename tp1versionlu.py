@@ -122,6 +122,33 @@ def NR_modif(f,sem,f_deriv_prim,f_deriv_seg,tol,nmax):
 
 
 def Secante(f,sem0,sem1,tol,nmax):
+    historia = np.zeros((nmax, 2))
+    p_x0 = sem0
+    p_x1 = sem1
+    #Antes de la primera iteración guardo con índice 0 la semilla
+    historia[0] = (0, p_x0)
+    historia[1] = (1, p_x1)
+
+    i = 2
+    while i < nmax:
+
+        #Genero la sucesión de Secante 
+        p = p_x1 - ((f(p_x1) * (p_x1 - p_x0))/(f(p_x1) - f(p_x0)))
+        #Guardo en la historia el número de iteración con el nuevo p
+        historia[i] = (i, p)
+        #print("Iteraciones:", i, "Raiz:", p)
+        #Si se llegó a la tolerancia deseada retorno la raíz, su número de iteración y la historia
+        if np.abs(p - p_x1) < tol:
+            #Acorto la historia hasta la última iteración
+            historia = historia[:i+1]
+            return p, i, historia
+
+        #Si no, actualizo el p anterior e incremento el índice
+        p_x0 = p_x1
+        p_x1 = p
+        i += 1
+    #Si se llega a la cantidad máxima de iteraciones sin encontrar la raíz, lo aviso y no retorno nada
+    print(error_failure)
     return None
 
 # ----------------------------------------------------
@@ -143,10 +170,10 @@ print("Historia normal \n", historiaRaices_NR_norm)
 raiz_NR_modif,nIteraciones_NR_modif,historiaRaices_NR_modif = NR_modif(funcion2,x0,der_prim_f2,der_seg_f2,tolerancia,max_it)
 print("Historia mod \n", historiaRaices_NR_modif)
 
-"""
+
 sem_sec_0 = 0
 sem_sec_1 = 2
-raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(g,p0,tolerancia,max_it)
+raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(funcion2 ,sem_sec_0, sem_sec_1, tolerancia,max_it)
 """
 
 """ 
@@ -195,4 +222,4 @@ plt.show()
 
 
 # -------------------------------------------------------
-"""
+
