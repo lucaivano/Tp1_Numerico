@@ -1,5 +1,5 @@
 
-import scipy 
+import scipy.optimize
 
 import numpy as np
 
