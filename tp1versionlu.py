@@ -7,7 +7,7 @@ Created on Sat May 23 20:17:31 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
-#from scipy import arange
+from numpy import arange
 
 # --------------------- Definicion de Funciones de Uso -------------------
 def funcion1 (x):
@@ -191,10 +191,10 @@ raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(funcion2 ,sem
 
 
 
-print_result(historiaRaices_NR_norm, tolerancia)
+#print_result(historiaRaices_NR_norm, tolerancia)
+
 
 """
-
 # --------------------------------------------------------
 
 # -------------------- Graficos de Funciones ----------------------------           
