@@ -219,7 +219,17 @@ plt.show()
 # -------------------------------------------------------
 
 # ------------------------- Orden de Convergencia -------------------------------
-
+def estimarOrdenConvergencia(historiaRaices, nIteraciones) : #nos sirve para ver la eficiencia del metodo en cualquier caso xq puede ver metodos que para cierto caso en perticular sea más rapido que otro pero lo que importa es en todos los casos 
+    
+    alfa= np.zeros((nIteraciones-1,2)) #necesiro dos columnas porque voy a poner el indice y el valor calculado del alfa
+    
+    for n in range(3-1,nIteraciones -1): #como para cada iteracion necesito 4 valores entonces arrranco en 3-1=2 por lo que el n va a tomar valores desde el 2 hasta numero de iteraciones-1
+        e_n_mas_1 = historiaRaices[n+1][1]-historiaRaices[n][1]
+        e_n = historiaRaices[n][1]-historiaRaices[n-1][1]
+        e_n_menos_1 = historiaRaices[n-1][1]-historiaRaices[n-2][1]
+    
+        alfa[n]= n,np.log10(np.abs(e_n_mas_1/e_n))/np.log10(np.abs(e_n/e_n_menos_1)) #aqúi pongp el indice y el valor de alfa
+    return alfa
 
 # -------------------------------------------------------
 
