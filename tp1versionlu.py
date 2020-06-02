@@ -38,21 +38,37 @@ def der_seg_f3(x):
     return((-24 * x + ((8 * x - 12.0)**2) * (x - 1.5)+ 36.0) * np.exp(-4 * (x - 1.5)**2 ))
 
 # --------------------------------------------------
+
+#función para imprimir la tabla de iteraciones indicando su tolerancia 
+SEPARADOR_RENGLON = "----------------------------------------------------------------------"  
+SEPARADOR_CAMPOS = "\t\t\t" #si queremos exportarlo como CSV 
+
+def print_result(historia,tolerancia):
     
+    print(SEPARADOR_RENGLON)
+    print('Iteración', "\t\t",'Raíz')
+    print(SEPARADOR_RENGLON)
+
+    for elemento in historia: 
+        print(elemento[0], SEPARADOR_CAMPOS, elemento[1])
+    
+    print(SEPARADOR_RENGLON)
+    print('con tolerancia = ',tolerancia)
+    print(SEPARADOR_RENGLON)
+
 # --------------------- Metodos de Busqueda de Raices -----------------------
 
-#YA LA PROBÉ Y ANDA BIEN
-ERROR_MSG = "No se encontró una raíz en el intervalo ingresado, seleccione otro por favor."   #visible para la función que imprima los errores
-NUM_DATOS_TABULADOS = 2  #visible para las funciones de búsquedad
-EXIT_FAILURE = "El procedimiento no convergió."  #visible para la función que imprima los errores
-#deberíamos ubicar estas variables como globales para funciones específicas y no como globales
+ERROR_MSG = "No se encontró una raíz en el intervalo ingresado, seleccione otro por favor."  
+NUM_DATOS_TABULADOS = 2  
+EXIT_FAILURE = "El procedimiento no convergió." 
+
 def biseccion(f, a, b, tol, n_max):
     
     if (np.sign(f(a))*np.sign(f(b)) >= 0):
         print(ERROR_MSG)
         return None
 
-    historia = np.zeros((n_max, NUM_DATOS_TABULADOS)) #se crea una matrix nula de [N_MAX x num_datos_tabulados]
+    historia = np.zeros((n_max, NUM_DATOS_TABULADOS)) #se crea una matriz nula de [N_MAX x num_datos_tabulados]
     p_anterior = a
     historia[0] = (0, p_anterior) #en la primera columna de la primera fila  (posición historria_00)
         
@@ -84,7 +100,7 @@ def biseccion(f, a, b, tol, n_max):
 
 def NR_normal(f,sem,f_deriv_prim,tol,nmax):
 
-    historia = np.zeros((nmax, 2))
+    historia = np.zeros((nmax, NUM_DATOS_TABULADOS))
     p_ant = sem
     #Antes de la primera iteración guardo con índice 0 la semilla
     historia[0] = (0, sem)
@@ -96,7 +112,7 @@ def NR_normal(f,sem,f_deriv_prim,tol,nmax):
         p = p_ant - f(p_ant)/f_deriv_prim(p_ant)
         #Guardo en la historia el número de iteración con el nuevo p
         historia[i] = (i, p)
-        #print("Iteraciones:", i, "Raiz:", p)
+
         #Si se llegó a la tolerancia deseada retorno la raíz, su número de iteración y la historia
         if np.abs(p - p_ant) < tol:
             #Acorto la historia hasta la última iteración
@@ -107,7 +123,7 @@ def NR_normal(f,sem,f_deriv_prim,tol,nmax):
         p_ant = p
         i += 1
     #Si se llega a la cantidad máxima de iteraciones sin encontrar la raíz, lo aviso y no retorno nada
-    print(error_failure)
+    print(EXIT_FAILURE)
     return None
 
 def NR_modif(f,sem,f_deriv_prim,f_deriv_seg,tol,nmax):
@@ -122,7 +138,7 @@ def NR_modif(f,sem,f_deriv_prim,f_deriv_seg,tol,nmax):
 
 
 def Secante(f,sem0,sem1,tol,nmax):
-    historia = np.zeros((nmax, 2))
+    historia = np.zeros((nmax, NUM_DATOS_TABULADOS))
     p_x0 = sem0
     p_x1 = sem1
     #Antes de la primera iteración guardo con índice 0 la semilla
@@ -136,7 +152,7 @@ def Secante(f,sem0,sem1,tol,nmax):
         p = p_x1 - ((f(p_x1) * (p_x1 - p_x0))/(f(p_x1) - f(p_x0)))
         #Guardo en la historia el número de iteración con el nuevo p
         historia[i] = (i, p)
-        #print("Iteraciones:", i, "Raiz:", p)
+
         #Si se llegó a la tolerancia deseada retorno la raíz, su número de iteración y la historia
         if np.abs(p - p_x1) < tol:
             #Acorto la historia hasta la última iteración
@@ -148,7 +164,7 @@ def Secante(f,sem0,sem1,tol,nmax):
         p_x1 = p
         i += 1
     #Si se llega a la cantidad máxima de iteraciones sin encontrar la raíz, lo aviso y no retorno nada
-    print(error_failure)
+    print(EXIT_FAILURE)
     return None
 
 # ----------------------------------------------------
@@ -157,45 +173,25 @@ def Secante(f,sem0,sem1,tol,nmax):
 
 tolerancia = 1e-5
 max_it = 500
-#a = 0
-#b = 2
+a = 0
+b = 2
 
-#raiz_Biseccion,nIteraciones_Biseccion,historiaRaices_Biseccion = Biseccion(f1,a,b,tolerancia,max_it)
+raiz_Biseccion,nIteraciones_Biseccion,historiaRaices_Biseccion = biseccion(funcion1,a,b,tolerancia,max_it)
 
 
 x0 = 1.0
 raiz_NR_norm,nIteraciones_NR_norm,historiaRaices_NR_norm = NR_normal(funcion2,x0,der_prim_f2,tolerancia,max_it)
-print("Historia normal \n", historiaRaices_NR_norm)
 
 raiz_NR_modif,nIteraciones_NR_modif,historiaRaices_NR_modif = NR_modif(funcion2,x0,der_prim_f2,der_seg_f2,tolerancia,max_it)
-print("Historia mod \n", historiaRaices_NR_modif)
 
 
 sem_sec_0 = 0
 sem_sec_1 = 2
 raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(funcion2 ,sem_sec_0, sem_sec_1, tolerancia,max_it)
-"""
-
-""" 
-
-#función para imprimir la tabla de iteraciones indicando su tolerancia 
-SEPARADOR_RENGLON = "----------------------------------------------------------------------"  #visible para la función que imprime
-SEPARADOR_CAMPOS = "\t\t\t" #si queremos exportarlo como CSV (visible para la función que imprime)
 
 
 
-def print_result(historia,tolerancia):
-    
-    print(SEPARADOR_RENGLON)
-    print('Iteración', "\t\t",'Raíz')
-    print(SEPARADOR_RENGLON)
-
-    for elemento in historia: 
-        print(elemento[0], SEPARADOR_CAMPOS, elemento[1])
-    
-    print(SEPARADOR_RENGLON)
-    print('con tolerancia = ',tolerancia)
-    print(SEPARADOR_RENGLON)
+print_result(historiaRaices_NR_norm, tolerancia)
 
 """
 
@@ -233,3 +229,4 @@ def estimarOrdenConvergencia(historiaRaices, nIteraciones) : #nos sirve para ver
 
 # -------------------------------------------------------
 
+"""
