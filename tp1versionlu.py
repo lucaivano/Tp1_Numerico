@@ -174,7 +174,7 @@ def error_asintotico(historia, orden, tolerancia):
         if diferencias[n + 1] < tolerancia:
             break
         lambda_n = diferencias[n + 1] / diferencias[n] ** orden
-        lambdas[0].append(n + 3)
+        lambdas[0].append(n + 2)
         lambdas[1].append(lambda_n)
     return lambdas
 
