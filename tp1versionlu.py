@@ -7,7 +7,6 @@ Created on Sat May 23 20:17:31 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
-from numpy import arange
 
 # --------------------- Definicion de Funciones de Uso -------------------
 def funcion1 (x):
@@ -227,7 +226,7 @@ raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(funcion2 ,sem
 # --------------------------------------------------------
 
 # -------------------- Graficos de Funciones ----------------------------           
-x = arange(0, 3, 0.01)
+x = np.arange(0, 3, 0.01)
 plt.figure()
 plt.plot(x, [ funcion1 (i) for i in x], '-',lw=2,label='funcion1')
 plt.plot(x, [ funcion2 (i) for i in x], '-',lw=2,label='funcion2')
