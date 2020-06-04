@@ -63,40 +63,37 @@ NUM_DATOS_TABULADOS = 2
 EXIT_FAILURE = "El procedimiento no convergió." 
 
 def biseccion(f, a, b, tol, n_max):
-    
-    if (np.sign(f(a))*np.sign(f(b)) >= 0):
+
+    if np.sign(f(a)) * np.sign(f(b)) >= 0:
         print(ERROR_MSG)
         return None
 
-    historia = np.zeros((n_max, NUM_DATOS_TABULADOS)) #se crea una matriz nula de [N_MAX x num_datos_tabulados]
+    historia = np.zeros((n_max, NUM_DATOS_TABULADOS))
     p_anterior = a
-    historia[0] = (0, p_anterior) #en la primera columna de la primera fila  (posición historria_00)
-        
+    historia[0] = (0, p_anterior)
     i = 1
-    
-    while i <= n_max:
-        
-        p = a + (b-a)/2
-        historia[i] = (i,p) #se va agregando elementos a la matriz
-        
-        if np.abs(f(p) - f(p_anterior)) < tol:
-            historia = historia[:i+1]  #se toma la matriz desde la primera fila(0) HASTA i+1-ésima fila(i)
-            return p,i,historia
-        
-        if (np.sign(f(a))*np.sign(f(p)) > 0):
-            a=p 
-            
-        else: 
-            b=p 
-        
-        i= i +1
-        p_anterior = p 
-    
-    print(EXIT_FAILURE)
-        
-    return None 
-    
 
+    while i <= n_max:
+
+        p = (a + b) / 2
+        historia[i] = (i, p)
+
+        if np.abs(p - p_anterior) < tol:
+            historia = historia[: i + 1]
+            return p, i, historia
+
+        if np.sign(f(a)) * np.sign(f(p)) > 0:
+            a = p
+
+        else:
+            b = p
+
+        i += 1
+        p_anterior = p
+
+    print(EXIT_FAILURE)
+
+    return None
 
 def NR_normal(f,sem,f_deriv_prim,tol,nmax):
 
@@ -169,6 +166,38 @@ def Secante(f,sem0,sem1,tol,nmax):
 
 # ----------------------------------------------------
 
+# ----------------------- Constante De Error Asintótico -------------------------
+
+def error_asintotico(historia, orden, tolerancia):
+    diferencias = [abs(historia[n + 1][1] - historia[n][1]) for n in range(len(historia) - 1)]
+    lambdas = [[],[]]
+    for n in range(len(diferencias) - 1):
+        if diferencias[n + 1] < tolerancia:
+            break
+        lambda_n = diferencias[n + 1] / diferencias[n] ** orden
+        lambdas[0].append(n + 3)
+        lambdas[1].append(lambda_n)
+    return lambdas
+
+# ---------------------------------------------------------------
+
+# ------------------------- Orden de Convergencia -------------------------------
+
+def estimarOrdenConvergencia(historia):
+    diferencias = [abs(historia[n + 1][1] - historia[n][1]) for n in range(len(historia) - 1)]
+    cocientes = [diferencias[m + 1] / diferencias[m] for m in range(len(diferencias) - 1)]
+    ordenes = [[2],[0]]
+    for n in range(len(cocientes) - 1):
+        if cocientes[n + 1] > cocientes[n]:
+            orden_n = ordenes[1][-1] #En lugar de un orden que no tendría sentido usamos el anterior
+        else:
+            orden_n = np.log(cocientes[n + 1]) / np.log(cocientes[n])
+        ordenes[0].append(n + 3)
+        ordenes[1].append(orden_n)
+    return ordenes
+
+# ----------------------------------------------------------------
+
 # --------------------Parametros de la Configuracion -------------------------
 
 tolerancia = 1e-5
@@ -194,7 +223,7 @@ raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(funcion2 ,sem
 #print_result(historiaRaices_NR_norm, tolerancia)
 
 
-"""
+'''
 # --------------------------------------------------------
 
 # -------------------- Graficos de Funciones ----------------------------           
@@ -213,20 +242,4 @@ plt.grid(True)
 plt.show()
 
 # -------------------------------------------------------
-
-# ------------------------- Orden de Convergencia -------------------------------
-def estimarOrdenConvergencia(historiaRaices, nIteraciones) : #nos sirve para ver la eficiencia del metodo en cualquier caso xq puede ver metodos que para cierto caso en perticular sea más rapido que otro pero lo que importa es en todos los casos 
-    
-    alfa= np.zeros((nIteraciones-1,2)) #necesiro dos columnas porque voy a poner el indice y el valor calculado del alfa
-    
-    for n in range(3-1,nIteraciones -1): #como para cada iteracion necesito 4 valores entonces arrranco en 3-1=2 por lo que el n va a tomar valores desde el 2 hasta numero de iteraciones-1
-        e_n_mas_1 = historiaRaices[n+1][1]-historiaRaices[n][1]
-        e_n = historiaRaices[n][1]-historiaRaices[n-1][1]
-        e_n_menos_1 = historiaRaices[n-1][1]-historiaRaices[n-2][1]
-    
-        alfa[n]= n,np.log10(np.abs(e_n_mas_1/e_n))/np.log10(np.abs(e_n/e_n_menos_1)) #aqúi pongp el indice y el valor de alfa
-    return alfa
-
-# -------------------------------------------------------
-
-"""
+'''
