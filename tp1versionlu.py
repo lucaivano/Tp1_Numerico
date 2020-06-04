@@ -242,3 +242,70 @@ plt.show()
 
 # -------------------------------------------------------
 '''
+# -------------------------- Pruebas Orden de Convergencia -----------------------------
+
+a = 0.0
+c = 1
+s = 1
+b = 2.0
+tol_1 = 1e-5
+tol_2 = 1e-13
+nMax = 100
+orden_biseccion = 1
+orden_secante = 1.618
+orden_NR = 2
+orden_modif = 2
+
+raiz_biseccion, num_iteraciones_biseccion, historia_biseccion = biseccion(funcion2, a, b, tol_2, nMax)
+orden_conv_1 = estimarOrdenConvergencia(historia_biseccion)
+lambdas_1 = error_asintotico(historia_biseccion, orden_biseccion, tol_2)
+
+raiz_secante, num_iteraciones_secante, historia_secante = Secante(funcion2, c, b, tol_2, nMax)
+orden_conv_2 = estimarOrdenConvergencia(historia_secante)
+lambdas_2 = error_asintotico(historia_secante, orden_secante, tol_2)
+
+raiz_NR, num_iteraciones_NR, historia_NR = NR_normal(funcion2, s, der_prim_f2, tol_2, nMax)
+orden_conv_3 = estimarOrdenConvergencia(historia_NR)
+lambdas_3 = error_asintotico(historia_NR, orden_NR, tol_2)
+
+raiz_modif, num_iteraciones_modif, historia_modif = NR_modif(funcion2, s, der_prim_f2, der_seg_f2, tol_2, nMax)
+orden_conv_4 = estimarOrdenConvergencia(historia_modif)
+lambdas_4 = error_asintotico(historia_modif, orden_modif, tol_2)
+
+plt.figure(2)
+plt.plot(historia_biseccion[:,0], historia_biseccion[:,1], '-', lw=2, label= 'Biseccion')
+plt.plot(historia_secante[:,0], historia_secante[:,1], '-', lw=2, label= 'secante')
+plt.plot(historia_NR[:,0], historia_NR[:,1], '-', lw=2, label= 'NR normal')
+plt.plot(historia_modif[:,0], historia_modif[:,1], '-', lw=2, label= 'NR modif')
+
+plt.xlabel(r'$n$ con $n$:Número de Iteraciones')
+plt.title('Raiz estimada')
+plt.legend(loc='best')
+plt.grid(True)
+plt.show(2)
+
+plt.figure(3)
+plt.plot(orden_conv_1[0], orden_conv_1[1], '-', lw=2, label= 'Biseccion')
+plt.plot(orden_conv_2[0], orden_conv_2[1], '-', lw=2, label= 'secante')
+plt.plot(orden_conv_3[0], orden_conv_3[1], '-', lw=2, label= 'NR normal')
+plt.plot(orden_conv_4[0], orden_conv_4[1], '-', lw=2, label= 'NR modif')
+
+plt.xlabel(r'$n$ con $n$:Número de Iteraciones')
+plt.ylabel('alfa estimado')
+plt.title('orden de convergencia')
+plt.legend(loc='best')
+plt.grid(True)
+plt.show(3)
+
+plt.figure(4)
+plt.plot(lambdas_1[0], lambdas_1[1], '-', lw=2, label= 'Biseccion')
+plt.plot(lambdas_2[0], lambdas_2[1], '-', lw=2, label= 'secante')
+plt.plot(lambdas_3[0], lambdas_3[1], '-', lw=2, label= 'NR normal')
+plt.plot(lambdas_4[0], lambdas_4[1], '-', lw=2, label= 'NR modif')
+
+plt.xlabel(r'$n$ con $n$:Número de Iteraciones')
+plt.ylabel('lambda estimado')
+plt.title('constante de error asintótica')
+plt.legend(loc='best')
+plt.grid(True)
+plt.show(4)
