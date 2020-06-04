@@ -182,18 +182,24 @@ def error_asintotico(historia, orden, tolerancia):
 
 # ------------------------- Orden de Convergencia -------------------------------
 
-def estimarOrdenConvergencia(historia):
-    diferencias = [abs(historia[n + 1][1] - historia[n][1]) for n in range(len(historia) - 1)]
-    cocientes = [diferencias[m + 1] / diferencias[m] for m in range(len(diferencias) - 1)]
-    ordenes = [[2],[0]]
-    for n in range(len(cocientes) - 1):
-        if cocientes[n + 1] > cocientes[n]:
-            orden_n = ordenes[1][-1] #En lugar de un orden que no tendría sentido usamos el anterior
+def estimarOrdenConvergencia(historiaRaices, nIteraciones) :  
+    
+    alfa= np.zeros((nIteraciones-1,2))
+    
+    for n in range(3-1,nIteraciones -1):
+        e_n_mas_1 = historiaRaices[n+1][1]-historiaRaices[n][1]
+        e_n = historiaRaices[n][1]-historiaRaices[n-1][1]
+        e_n_menos_1 = historiaRaices[n-1][1]-historiaRaices[n-2][1]
+        
+        if((np.abs(e_n_mas_1/e_n) <= np.abs(e_n/e_n_menos_1)) or n<=3): #en el informe se explica el porqué de esta condición
+            alfa[n]= n,np.abs(np.log10(np.abs(e_n_mas_1/e_n))/np.log10(np.abs(e_n/e_n_menos_1))) 
         else:
-            orden_n = np.log(cocientes[n + 1]) / np.log(cocientes[n])
-        ordenes[0].append(n + 3)
-        ordenes[1].append(orden_n)
-    return ordenes
+            while(n < nIteraciones-1):
+                alfa[n] = n, alfa[n-1][1]
+                n=n+1     
+            return alfa
+           
+    return alfa
 
 # ----------------------------------------------------------------
 
