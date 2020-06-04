@@ -203,34 +203,132 @@ def estimarOrdenConvergencia(historiaRaices, nIteraciones) :
 
 # ----------------------------------------------------------------
 
-# --------------------Parametros de la Configuracion -------------------------
+# --------------------Parámetros de la Configuracion -------------------------
 
 tolerancia = 1e-5
-max_it = 500
+#tolerancia = 1e-13
+max_it = 100
+
+#Límites del intervalo para bisección
 a = 0
 b = 2
 
-raiz_Biseccion,nIteraciones_Biseccion,historiaRaices_Biseccion = biseccion(funcion1,a,b,tolerancia,max_it)
-
-
+#Semilla para métodos de Newton Raphhson
 x0 = 1.0
-raiz_NR_norm,nIteraciones_NR_norm,historiaRaices_NR_norm = NR_normal(funcion2,x0,der_prim_f2,tolerancia,max_it)
 
-raiz_NR_modif,nIteraciones_NR_modif,historiaRaices_NR_modif = NR_modif(funcion2,x0,der_prim_f2,der_seg_f2,tolerancia,max_it)
-
-
+#Semillas para método de Secante
 sem_sec_0 = 0
 sem_sec_1 = 2
+
+#Órdenes de convergencia teóricos para utilizar en el cálculo de lambda
+orden_biseccion = 1
+orden_secante = 1.618
+orden_NR = 2
+orden_modif = 2
+
+#---------------------------------------------- Función 1 ------------------------------------------------------------------
+
+raiz_Biseccion,nIteraciones_Biseccion,historiaRaices_Biseccion = biseccion(funcion1,a,b,tolerancia,max_it)
+raiz_NR_norm,nIteraciones_NR_norm,historiaRaices_NR_norm = NR_normal(funcion1,x0,der_prim_f1,tolerancia,max_it)
+raiz_NR_modif,nIteraciones_NR_modif,historiaRaices_NR_modif = NR_modif(funcion1,x0,der_prim_f1,der_seg_f1,tolerancia,max_it)
+raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(funcion1 ,sem_sec_0, sem_sec_1, tolerancia,max_it)
+
+print("\nBisección")
+print_result(historiaRaices_Biseccion, tolerancia)
+print("\nNewton Raphson")
+print_result(historiaRaices_NR_norm, tolerancia)
+print("\nNewton Raphson modificado")
+print_result(historiaRaices_NR_modif, tolerancia)
+print("\nSecante")
+print_result(historiaRaices_Secante, tolerancia)
+
+"""#Descomentar para correr métodos para la función 2
+#---------------------------------------------- Función 2 ------------------------------------------------------------------
+
+raiz_Biseccion,nIteraciones_Biseccion,historiaRaices_Biseccion = biseccion(funcion2,a,b,tolerancia,max_it)
+raiz_NR_norm,nIteraciones_NR_norm,historiaRaices_NR_norm = NR_normal(funcion2,x0,der_prim_f2,tolerancia,max_it)
+raiz_NR_modif,nIteraciones_NR_modif,historiaRaices_NR_modif = NR_modif(funcion2,x0,der_prim_f2,der_seg_f2,tolerancia,max_it)
 raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(funcion2 ,sem_sec_0, sem_sec_1, tolerancia,max_it)
 
+print("\nBisección")
+print_result(historiaRaices_Biseccion, tolerancia)
+print("\nNewton Raphson")
+print_result(historiaRaices_NR_norm, tolerancia)
+print("\nNewton Raphson modificado")
+print_result(historiaRaices_NR_modif, tolerancia)
+print("\nSecante")
+print_result(historiaRaices_Secante, tolerancia)
+"""
+
+""" #Descomentar para correr métodos para la función 3
+#---------------------------------------------- Función 3 ------------------------------------------------------------------
+
+#Utilizar estas semillas para ver la historia de cada método para la función 3 ya que con las originales no convergen los métodos de Newton Rapshon, Newton Raphson 
+#modificado y Secante
+#x0 = 1.3
+#sem_sec_0 = 0.8
+
+raiz_Biseccion,nIteraciones_Biseccion,historiaRaices_Biseccion = biseccion(funcion3,a,b,tolerancia,max_it)
+
+raiz_NR_norm,nIteraciones_NR_norm,historiaRaices_NR_norm = NR_normal(funcion3,x0,der_prim_f3,tolerancia,max_it)
+
+raiz_NR_modif,nIteraciones_NR_modif,historiaRaices_NR_modif = NR_modif(funcion3,x0,der_prim_f3,der_seg_f3,tolerancia,max_it)
+
+raiz_Secante,nIteraciones_Secante,historiaRaices_Secante = Secante(funcion3 ,sem_sec_0, sem_sec_1, tolerancia,max_it)
+"""
+
+""" #Descomentar para ver las historias de cada método con las semillas que propusimos con las que convergen los últimos 3 métodos para la función 3
+print("\nBisección")
+print_result(historiaRaices_Biseccion, tolerancia)
+print("\nNewton Raphson")
+print_result(historiaRaices_NR_norm, tolerancia)
+print("\nNewton Raphson modificado")
+print_result(historiaRaices_NR_modif, tolerancia)
+print("\nSecante")
+print_result(historiaRaices_Secante, tolerancia)
+"""
 
 
-#print_result(historiaRaices_NR_norm, tolerancia)
+orden_conv_biseccion = estimarOrdenConvergencia(historiaRaices_Biseccion,nIteraciones_Biseccion)
+orden_conv_NR = estimarOrdenConvergencia(historiaRaices_NR_norm,nIteraciones_NR_norm)
+orden_conv_NRmodif = estimarOrdenConvergencia(historiaRaices_NR_modif,nIteraciones_NR_modif)
+orden_conv_secante = estimarOrdenConvergencia(historiaRaices_Secante,nIteraciones_Secante)
+
+lambdas_biseccion = error_asintotico(historiaRaices_Biseccion, orden_biseccion, tolerancia)
+lambdas_NR = error_asintotico(historiaRaices_NR_norm, nIteraciones_NR_norm, tolerancia)
+lambdas_NRmodif = error_asintotico(historiaRaices_NR_modif, nIteraciones_NR_modif, tolerancia)
+lambdas_secante = error_asintotico(historiaRaices_Secante, nIteraciones_Secante, tolerancia)
 
 
-'''
-# --------------------------------------------------------
+#Gráfico orden de convergencia
+plt.figure()
+plt.plot(orden_conv_biseccion[:,0], orden_conv_biseccion[:,1], '--', lw=4, label= 'Bisección')  
+plt.plot(orden_conv_secante[:,0], orden_conv_secante[:,1], '-', lw=2, label= 'Secante') 
+plt.plot(orden_conv_NR[:,0], orden_conv_NR[:,1], '-', lw=2, label= 'Newton-Raphson') 
+plt.plot(orden_conv_NRmodif[:,0], orden_conv_NRmodif[:,1], '-', lw=2, label= 'Newton-Rapson modificado')  
 
+plt.xlabel(r'$n-2$ con $n$:Número de Iteraciones')
+plt.ylabel('alfa')
+plt.title('orden de convergencia')
+plt.legend(loc='best')
+plt.grid(True)
+plt.show() 
+
+#Gráfico de constantes asintóticas
+plt.figure()
+plt.plot(lambdas_biseccion[0], lambdas_biseccion[1], '-', lw=2, label= 'Biseccion')
+plt.plot(lambdas_secante[0], lambdas_secante[1], '-', lw=2, label= 'secante')
+plt.plot(lambdas_NR[0], lambdas_NR[1], '-', lw=2, label= 'NR normal')
+plt.plot(lambdas_NRmodif[0], lambdas_NRmodif[1], '-', lw=2, label= 'NR modif')
+
+plt.xlabel(r'$n$ con $n$:Número de Iteraciones')
+plt.ylabel('lambda estimado')
+plt.title('constante de error asintótica')
+plt.legend(loc='best')
+plt.grid(True)
+plt.show()
+
+"""
 # -------------------- Graficos de Funciones ----------------------------           
 x = np.arange(0, 3, 0.01)
 plt.figure()
@@ -246,72 +344,4 @@ plt.legend(loc='best')
 plt.grid(True)
 plt.show()
 
-# -------------------------------------------------------
-'''
-# -------------------------- Pruebas Orden de Convergencia -----------------------------
-
-a = 0.0
-c = 1
-s = 1
-b = 2.0
-tol_1 = 1e-5
-tol_2 = 1e-13
-nMax = 100
-orden_biseccion = 1
-orden_secante = 1.618
-orden_NR = 2
-orden_modif = 2
-
-raiz_biseccion, num_iteraciones_biseccion, historia_biseccion = biseccion(funcion2, a, b, tol_2, nMax)
-orden_conv_1 = estimarOrdenConvergencia(historia_biseccion)
-lambdas_1 = error_asintotico(historia_biseccion, orden_biseccion, tol_2)
-
-raiz_secante, num_iteraciones_secante, historia_secante = Secante(funcion2, c, b, tol_2, nMax)
-orden_conv_2 = estimarOrdenConvergencia(historia_secante)
-lambdas_2 = error_asintotico(historia_secante, orden_secante, tol_2)
-
-raiz_NR, num_iteraciones_NR, historia_NR = NR_normal(funcion2, s, der_prim_f2, tol_2, nMax)
-orden_conv_3 = estimarOrdenConvergencia(historia_NR)
-lambdas_3 = error_asintotico(historia_NR, orden_NR, tol_2)
-
-raiz_modif, num_iteraciones_modif, historia_modif = NR_modif(funcion2, s, der_prim_f2, der_seg_f2, tol_2, nMax)
-orden_conv_4 = estimarOrdenConvergencia(historia_modif)
-lambdas_4 = error_asintotico(historia_modif, orden_modif, tol_2)
-
-plt.figure(2)
-plt.plot(historia_biseccion[:,0], historia_biseccion[:,1], '-', lw=2, label= 'Biseccion')
-plt.plot(historia_secante[:,0], historia_secante[:,1], '-', lw=2, label= 'secante')
-plt.plot(historia_NR[:,0], historia_NR[:,1], '-', lw=2, label= 'NR normal')
-plt.plot(historia_modif[:,0], historia_modif[:,1], '-', lw=2, label= 'NR modif')
-
-plt.xlabel(r'$n$ con $n$:Número de Iteraciones')
-plt.title('Raiz estimada')
-plt.legend(loc='best')
-plt.grid(True)
-plt.show(2)
-
-plt.figure(3)
-plt.plot(orden_conv_1[0], orden_conv_1[1], '-', lw=2, label= 'Biseccion')
-plt.plot(orden_conv_2[0], orden_conv_2[1], '-', lw=2, label= 'secante')
-plt.plot(orden_conv_3[0], orden_conv_3[1], '-', lw=2, label= 'NR normal')
-plt.plot(orden_conv_4[0], orden_conv_4[1], '-', lw=2, label= 'NR modif')
-
-plt.xlabel(r'$n$ con $n$:Número de Iteraciones')
-plt.ylabel('alfa estimado')
-plt.title('orden de convergencia')
-plt.legend(loc='best')
-plt.grid(True)
-plt.show(3)
-
-plt.figure(4)
-plt.plot(lambdas_1[0], lambdas_1[1], '-', lw=2, label= 'Biseccion')
-plt.plot(lambdas_2[0], lambdas_2[1], '-', lw=2, label= 'secante')
-plt.plot(lambdas_3[0], lambdas_3[1], '-', lw=2, label= 'NR normal')
-plt.plot(lambdas_4[0], lambdas_4[1], '-', lw=2, label= 'NR modif')
-
-plt.xlabel(r'$n$ con $n$:Número de Iteraciones')
-plt.ylabel('lambda estimado')
-plt.title('constante de error asintótica')
-plt.legend(loc='best')
-plt.grid(True)
-plt.show(4)
+# ------------------------------------------------------- """
